@@ -10,8 +10,9 @@
             background-color: hsl(0,0%,90%);
             color: hsl(210,8%,5%);
 
+            padding-top: 1em;
             margin: auto;
-            width: 45%;
+            max-width: 680px;
 
             font-family: sans-serif;
             text-align: justify;
@@ -22,6 +23,10 @@
             & > h3::before {
                 content: attr(data-index) " ";   
             }
+        }
+        #content {
+            margin: auto;
+            width: 90%;
         }
 
         info-author {
@@ -40,7 +45,6 @@
         
         #header {
             height: 2em;
-            margin: 1%;
             img {
                 height: 75%;
             }
@@ -85,10 +89,12 @@
     </style>
 </head>
 <body id="body">
-    <div id="header" class="hidden fadein">
-        <a href="https://github.com/slaimon/markov">
-            <img src="./icons/github.svg" alt="View the repository on github">
-        </a>
+    <div id="content" class="hidden fadein">
+        <div id="header">
+            <a href="https://github.com/slaimon/markov">
+                <img src="./icons/github.svg" alt="View the repository on github">
+            </a>
+        </div>
     </div>
     <div id="loader"></div>
 </body>
@@ -127,13 +133,15 @@
     const doc = main();
 
     const body = document.getElementById("body");
-    const header = document.getElementById("header");
+    const content = document.getElementById("content");
     const loader = document.getElementById("loader");
-    const content = document.createElement("div");
-    content.classList.add("fadein");
+    const text = document.createElement("div");
+    text.id = "text";
+    text.classList.add("fadein");
 
-    content.innerHTML = await doc;
-    body.replaceChild(content, loader);
-    header.classList.remove("hidden");
+    text.innerHTML = await doc;
+    content.appendChild(text);
+    body.removeChild(loader);
+    content.classList.remove("hidden");
 </script>
 </html>
