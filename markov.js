@@ -6,8 +6,8 @@ function tokenize(corpus) {
     return corpus
         .replace(/[\"\“\”\[\(\)\]_]/g, '')
         .replace(/‘’/g, '\'')
-        .replace(/—/g, ' ') // not proud of this line
         .replace(/[\n\t\r—]+/g, ' ')
+        .replace(/(?<!['.])\b(?!I)[A-Z]\.\s+/g, ' ') // remove initials
         .split(' ')
         .map((token) => // quick and dirty way to get rid of words in ALL CAPS
             (token.length > 1) && (token === token.toUpperCase()) ?
