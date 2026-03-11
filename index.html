@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Book of Sand</title>
+    <link rel="icon" type="image/svg" href="icons/favicon.svg">
+    <style>
+        body {
+            background-color: hsl(0,0%,90%);
+            color: hsl(210,8%,5%);
+
+            margin: auto;
+            width: 45%;
+
+            font-family: sans-serif;
+            text-align: justify;
+            
+            & > h2::before {
+                content: attr(data-index) ". ";
+            }
+            & > h3::before {
+                content: attr(data-index) " ";   
+            }
+        }
+
+        info-author {
+            font-size: medium;
+            font-style: italic;
+        }
+        info-main h1 {
+            margin-bottom: 0.1em;
+        }
+        hr {
+            color: lightgray;
+        }
+        .hidden {
+            display: none;
+        }
+        
+        #header {
+            height: 2em;
+            margin: 1%;
+            img {
+                height: 75%;
+            }
+        }
+        @media print {
+            #header {
+                display: none;
+            }
+        }
+
+        .fadein {
+            opacity: 1;
+            animation-name: fadein-anim;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 0.3s;
+        }
+        @keyframes fadein-anim {
+            0% { opacity: 0%; }
+            100% { opacity: 100%; }
+        }
+
+        /* https://uiverse.io/Fernando-sv/quiet-zebra-41 */
+
+        #loader {
+            margin: auto;
+            margin-top: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid rgba(0, 0, 0, .1);
+            border-left-color: transparent;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin89345 1s linear infinite;
+        }
+        @keyframes spin89345 {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body id="body">
+    <div id="header" class="hidden fadein">
+        <a href="https://github.com/slaimon/markov">
+            <img src="./icons/github.svg" alt="View the repository on github">
+        </a>
+    </div>
+    <div id="loader"></div>
+</body>
+<script type="module">
+    import {Generator} from "./markov.js";
+    import {Document} from "./document.js";
+    import {renderToHTML, testHTML} from "./renderer/html.js";
+
+    async function read_file(fname) {
+        let result;
+        await fetch("works/"+fname)
+            .then((res) => res.text())
+            .then((text) => {result = text;})
+            .catch((e) => console.error(e));
+        
+        return result;
+    }
+
+    let train = [
+        "frankenstein",
+        "alice",
+        "peter-pan",
+        "beyond",
+        "revolution",
+        "moby"
+    ]
+
+    async function main() {
+        var g = new Generator();
+        train = await Promise.all(train.map((name) => read_file(name+".txt")));
+        train.forEach((text) => g.train(text));
+        const document = new Document(g, 2);
+        return renderToHTML(document);
+    }
+
+    const doc = main();
+
+    const body = document.getElementById("body");
+    const header = document.getElementById("header");
+    const loader = document.getElementById("loader");
+    const content = document.createElement("div");
+    content.classList.add("fadein");
+
+    content.innerHTML = await doc;
+    body.replaceChild(content, loader);
+    header.classList.remove("hidden");
+</script>
+</html>
