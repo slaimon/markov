@@ -9,8 +9,8 @@ const min_sub = 3;
 const max_sub = 5;
 
 // limits to the size of a subdivision's introduction, in paragraphs
-const min_intro = 1;
-const max_intro = 1;
+const min_intro = min_sub;
+const max_intro = max_sub;
 
 // max length of a title, in tokens
 const max_title = 5;
@@ -40,22 +40,23 @@ function generate_paragraph(generator) {
 function generate_intro(generator) {
     return Array.from(
         { length: rand_between(min_intro, max_intro) },
-        () => generate_paragraph(generator))
-    .join("\n\n");
+        () => new Subdivision(generator, 0)
+    );
 
 }
 
 /**
  * A Subdivision is part of a document. It generalises the concepts of chapter, section, subsection
  * and paragraph.
- * 
- * - A subdivision of depth 0 is a paragraph: it has no title and no further subdivisions.
- * - All subdivisions of depth d > 0 have a title and are composed of a certain number
- * of subdivisions of depth d-1.
- * 
+ *
+ * - A subdivision of depth 0 is a paragraph: it has no title, no introduction and no further
+ *   subdivisions.
+ * - All subdivisions of depth d > 0 have a title and are composed of a certain number of
+ *   subdivisions of depth d-1. They also have an introductory paragraph (string).
+ *
  */
 class Subdivision {
-    constructor(generator, depth, index) {
+    constructor(generator, depth, index=undefined) {
         this.depth = depth;
         this.index = index;
         this._generate(generator);
@@ -90,9 +91,12 @@ class Subdivision {
 }
 
 /**
- * A Document has a title, a subtitle (may be left empty) an author and a content.
- * 
+ * A Document has a title, a subtitle (may be left empty) an author, an introduction and some
+ * content.
+ *
  * The content is an array of chapters. Each chapter is a Subdivision of the given depth.
+ * 
+ * The introduction is an array of paragraphs, that is, Subdivisions of depth 0.
  */
 class Document {
     constructor(generator, num_chapters, depth=2) {
@@ -117,8 +121,8 @@ class Document {
         this.title = callbackfn(this.title);
         this.subtitle = callbackfn(this.subtitle);
         this.author = callbackfn(this.author);
-        this.intro = callbackfn(this.intro);
 
+        this.intro.forEach((paragraph) => paragraph.transform(callbackfn));
         this.content.forEach((chapter) => chapter.transform(callbackfn));
     }
 }

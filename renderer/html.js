@@ -55,7 +55,6 @@ function renderTitle(document) {
             //+ subtitle
             + tag("info-author", document.author)
             + tag("h2", document.subtitle)
-            + tag("p", document.intro)
     );
 }
 
@@ -77,14 +76,14 @@ function _renderSubsection(section, max_depth) {
 function renderToHTML(document) {
     document.transform(sanitize);
 
+    const intro = document.intro.map(
+        (paragraph) => _renderSubsection(paragraph, 1)
+    ).join('\n');
     const content = document.content.map(
-        (child) => _renderSubsection(child, document.depth)
+        (sub) => _renderSubsection(sub, document.depth)
     ).join('\n');
 
-    let info_section = renderTitle(document);
-
-    return info_section + '\n\n'
-        + content + '\n';
+    return [renderTitle(document), intro, content].join('\n');
 }
 
 function testHTML() {
