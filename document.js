@@ -20,10 +20,10 @@ function rand_between(a, b) {
     return Math.round(Math.random() * (b-a)) + a;
 }
 
-function generate_title(generator, num_sentences, max_tokens) {
+function generate_title(generator, max_tokens) {
     return generator
-        .sentences(num_sentences, max_tokens)
-        .replace(/.$/m, '');
+        .sentences(1, max_tokens)
+        .replace(/([a-z0-9])\.$/gmi, "$1");
 }
 
 function generate_author(generator) {
@@ -67,7 +67,7 @@ class Subdivision {
             return;
         }
 
-        this.title = generate_title(generator, 1, max_title);
+        this.title = generate_title(generator, max_title);
         this.intro = generate_paragraph(generator);
 
         this.content = Array.from(
@@ -96,8 +96,8 @@ class Subdivision {
  */
 class Document {
     constructor(generator, num_chapters, depth=2) {
-        this.title = generate_title(generator, 1, max_title);
-        this.subtitle = generate_title(generator, rand_between(0,2), max_title*1.5);
+        this.title = generate_title(generator, max_title);
+        this.subtitle = generate_title(generator, max_title*1.5);
         this.author = generate_author(generator);
         this.depth = depth;
 
