@@ -9,8 +9,8 @@ const min_sub = 3;
 const max_sub = 5;
 
 // limits to the size of a subdivision's introduction, in paragraphs
-const min_intro = min_sub;
-const max_intro = max_sub;
+const min_intro = 1;
+const max_intro = 3;
 
 // max length of a title, in tokens
 const max_title = 5;

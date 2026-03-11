@@ -54,7 +54,6 @@ function renderTitle(document) {
             + open_tag("hr")
             //+ subtitle
             + tag("info-author", document.author)
-            + tag("h2", document.subtitle)
     );
 }
 
