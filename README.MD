@@ -11,11 +11,12 @@ is extremely lightweight and completely harmless ;)
 
 ## Why?
 
-There are "services" online that gatekeep knowledge by forcing you to upload your own documents in
-exchange for theirs. That way, they amass even more knowledge and sell it to AI companies and other
-shady actors.
+There are "services" online that allow anyone to upload books, magazines and documents, but then
+turn around and gatekeep all that knowledge by forcing other users to share a certain number of files
+before they can download anything. Through this one-sided sharing model, they amass even more knowledge
+and sell it to AI companies and other shady actors.
 
-I won't say more, except that you can easily print a webpage to PDF and upload it wherever you
+I won't say more, except that you can easily print any webpage to PDF and upload it wherever you
 want. Have fun!
 
 ## Source structure
